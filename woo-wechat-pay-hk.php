@@ -74,3 +74,25 @@ add_action( 'wp_enqueue_scripts', function () {
 		'ajax_url' => admin_url( 'admin-ajax.php' )
 	) );
 } );
+
+
+if ( ! function_exists( 'woo_wechat_pay_hk_plugin_loaded' ) ) {
+	function woo_wechat_pay_hk_plugin_loaded() {
+		if ( ! class_exists( 'WC_Payment_Gateway' ) ) {
+			return;
+		}
+		include( plugin_dir_path( __FILE__ ) . 'WOO_Wechat_Pay_HK_Gateway.php' );
+	}
+}
+
+add_action( 'plugins_loaded', 'woo_wechat_pay_hk_plugin_loaded', 0 );
+
+if ( ! function_exists( 'add_woo_wechat_pay_hk_payment_gateway' ) ) {
+	function add_woo_wechat_pay_hk_payment_gateway( $gateways ) {
+		$gateways[] = 'WOO_Wechat_Pay_HK_Gateway';
+
+		return $gateways;
+	}
+}
+
+add_filter( 'woocommerce_payment_gateways', 'add_woo_wechat_pay_hk_payment_gateway' );
